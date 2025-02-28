@@ -48,16 +48,21 @@ function main() {
 }
 
 function loginToIBroadcast(callback) {
-    const payload = `mode=login_token&app_id=1152&login_token=CKX817`;
+    const payload = JSON.stringify({
+        "mode": "login_token",
+        "app_id": "1152", // Your app ID for gBroadcast GNOME iBroadcast App
+        "type": "account",
+        "login_token": "CKX817" // Replace NEWTOKEN123 with the actual approved login_token
+    });
 
     print('Sending login request with payload:', payload);
 
     let session = new Soup.Session();
-    let message = Soup.Message.new('POST', 'https://api.ibroadcast.com/s/login_token'); // Dev endpoint with 200 history
-    message.request_headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    let message = Soup.Message.new('POST', 'https://api.ibroadcast.com/json'); // JSON API endpoint
+    message.request_headers.append('Content-Type', 'application/json');
     message.request_headers.append('x-ibroadcast-app', 'gnome-app');
     message.set_request_body_from_bytes(
-        'application/x-www-form-urlencoded',
+        'application/json',
         new GLib.Bytes(payload)
     );
 
@@ -88,7 +93,7 @@ function loginToIBroadcast(callback) {
         }
     }
 
-    session.send_and_read_async(message, 0, null, onLoginResponse);
+    session.send_and-read_async(message, 0, null, onLoginResponse);
 }
 
 function fetchTracks(authToken, callback) {
